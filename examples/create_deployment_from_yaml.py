@@ -40,6 +40,13 @@ def create_from_str():
 
     app_api = client.AppsV1beta1Api(k8s_client)
     dep = app_api.read_namespaced_deployment(name="nginx-app-3", namespace="default")
+    
+    # ---
+    
+    k8s_client = k8s_api_connect()
+    yml_str = render_to_string('template.yaml', variables)
+    yml_obj = yaml.safe_load(yml_str)
+    kubernetes.utils.create_from_dict(k8s_client, yml_obj)
 
 
 if __name__ == '__main__':
