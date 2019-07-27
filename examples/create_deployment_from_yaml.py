@@ -17,7 +17,7 @@ from os import path
 from kubernetes import client, config, utils
 
 
-def main():
+def create_from_file():
     # Configs can be set in Configuration class directly or using helper
     # utility. If no argument provided, the config will be loaded from
     # default location.
@@ -28,6 +28,20 @@ def main():
     deps = k8s_api.read_namespaced_deployment("nginx-deployment", "default")
     print("Deployment {0} created".format(deps.metadata.name))
 
+    
+def create_from_str():
+    k8s_client = client.api_client.ApiClient(configuration=self.config)
+    with open(self.path_prefix + "apps-deployment.yaml") as f:
+        yml_obj = yaml.safe_load(f)
+
+    yml_obj["metadata"]["name"] = "nginx-app-3"
+
+    utils.create_from_dict(k8s_client, yml_obj)
+
+    app_api = client.AppsV1beta1Api(k8s_client)
+    dep = app_api.read_namespaced_deployment(name="nginx-app-3", namespace="default")
+
 
 if __name__ == '__main__':
-    main()
+    create_from_file()
+    create_from_str()
